@@ -1,0 +1,16 @@
+[project]
+name = "ai-scripts"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.36.9",
+    "huggingface-hub>=0.28.1",
+    "tqdm>=4.67.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.4",
+]
