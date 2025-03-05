@@ -56,13 +56,13 @@ def upload_hf_model_to_s3(model_path: Path, bucket_prefix: str | None = None):
 
 
 # Function to create a Bedrock model using the Hugging Face model
-def createbedrockmodel(s3_uri: str):
+def createbedrockmodel(s3_uri: str, model_name: str):
     """Create a Bedrock model using the Hugging Face model files uploaded to S3."""
     return bedrock_client.create_model_import_job(
-        jobName="string",
-        importedModelName="string",
-        roleArn="string",
-        modelDataSource={"s3DataSource": {"s3Uri": "string"}},
+        jobName=f"import-{model_name}",
+        importedModelName=model_name,
+        roleArn="arn:aws:iam::610119931565:role/service-role/bedrock-custom-model-s3-import-role",
+        modelDataSource={"s3DataSource": {"s3Uri": s3_uri}},
         clientRequestToken=bedrock_model_name,
     )
 
@@ -71,9 +71,10 @@ def main():
     # Download the Hugging Face model
     model_path = download_huggingface_model()
     s3_uri = upload_hf_model_to_s3(model_path)
-    br_model = createbedrockmodel(s3_uri)
+    br_model = createbedrockmodel(s3_uri, bedrock_model_name)
     print("Bedrock Model Creation Response:", br_model)
 
 
 if __name__ == "__main__":
+    print("Importing ", bedrock_model_name, " from Hugging Face model ", huggingface_model_id)
     main()
